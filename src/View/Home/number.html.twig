@@ -3,7 +3,8 @@
 {% block content %}
 
     <form action="/api/cards" method="post">
-        <label class="label-number btn-shine" for="number">Number of cards:</label><input class="start-game-btn number-btn" name="number" type="number" min="4" max="100">
-        <button type="submit" class="start-game-btn" >Let's go!</button>
+        <label class="label-number btn-shine" for="number">Give the number of cards you wanna play with:
+        </label><input class="number-btn" name="number" type="number" min="4" max="100">
+        <button type="submit" class="start-game-btn" >Start game</button>
     </form>
 {% endblock %}

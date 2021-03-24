@@ -91,13 +91,24 @@ body {
     font-size: 3em;
     letter-spacing: 4px;
     overflow: hidden;
-    background: linear-gradient(90deg, #110019, #fff, #110019);
+    background: linear-gradient(110deg, #110019, #fff, #110019);
     background-repeat: no-repeat;
     background-size: 80%;
-    animation: animate 3s linear infinite;
+    animation: animate 6s linear infinite;
     -webkit-background-clip: text;
     -webkit-text-fill-color: rgba(17, 0, 25, 0);
 }
+
+
+.btn-not-shine {
+    padding: 100px;
+    font-family: Andale Mono, monospace;
+    text-transform: uppercase;
+    font-size: 3em;
+    letter-spacing: 4px;
+    color: white
+}
+
 
 @keyframes animate {
     0% {
@@ -121,6 +132,8 @@ body {
 
 .start-game-btn:hover {
     color:white;
+    transition: 1s ease-out;
+    background-color: transparent;
 }
 
 .number-btn{

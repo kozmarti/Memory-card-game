@@ -13,9 +13,9 @@ class ApiController extends AbstractController
     {
 
         $client = HttpClient::create([
-        'headers' => [
-            'Authorization' => '6i6JpxJ67Dye6UFbIbODQrsrJ8v2K2VOhcfbsa',
-        ],
+            'headers' => [
+                'Authorization' => '6i6JpxJ67Dye6UFbIbODQrsrJ8v2K2VOhcfbsa',
+            ],
         ]);
         $response = $client->request(
             'GET',
@@ -30,46 +30,52 @@ class ApiController extends AbstractController
     {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $cardsNumber = $_POST['number'];
-            if ($cardsNumber % 2 !== 0) {
-                $cardsNumber += 1;
+            if (empty($cardsNumber)) {
+                header('Location:/home/number');
+            } else if ($cardsNumber < 3 || $cardsNumber > 100) {
+                header('Location:/home/number');
+            } else {
+                if ($cardsNumber % 2 !== 0) {
+                    $cardsNumber += 1;
+                }
             }
-        }
-        $cardImages = [];
-        $allCards = [];
+            $cardImages = [];
+            $allCards = [];
 
-        for ($i = 1; $i <= ($cardsNumber / 2); $i++) {
-            $date = rand(2018, 2019) . '-' . rand(10, 12) . '-' . rand(10, 28);
-            $cardImages[$i] = $this->nasaAPI($date);
-            if (strpos($cardImages[$i],'youtube')){
-                $i--;
+            for ($i = 1; $i <= ($cardsNumber / 2); $i++) {
+                $date = rand(2018, 2020) . '-' . rand(10, 12) . '-' . rand(10, 28);
+                $cardImages[$i] = $this->nasaAPI($date);
+                if (strpos($cardImages[$i], 'youtube')) {
+                    $i--;
+                }
             }
+
+            for ($i = 1; $i <= ($cardsNumber); $i++) {
+                $allCards[] .= $i;
+            }
+            $finalCards = [];
+
+            for ($i = 1; $i <= ($cardsNumber / 2); $i++) {
+                $allImages = array_merge($cardImages, $cardImages);
+                $w = array_rand(array_flip($cardImages), 1);
+                $key = array_search($w, $cardImages);
+                unset($cardImages[$key]);
+
+                $card1 = array_rand(array_flip($allCards), 1);
+                $key = array_search($card1, $allCards);
+                unset($allCards[$key]);
+
+                $card2 = array_rand(array_flip($allCards), 1);
+                $key = array_search($card2, $allCards);
+                unset($allCards[$key]);
+
+                $finalCards[$card1] = $w;
+                $finalCards[$card2] = $w;
+            }
+            ksort($finalCards);
+
+
+            return $this->twig->render('Home/game.html.twig', ['cards' => $finalCards, 'card_number' => $cardsNumber]);
         }
-
-        for ($i = 1; $i <= ($cardsNumber); $i++) {
-            $allCards[] .= $i;
-        }
-        $finalCards=[];
-
-        for ($i = 1; $i <= ($cardsNumber / 2); $i++) {
-            $allImages = array_merge($cardImages, $cardImages);
-            $w = array_rand(array_flip($cardImages), 1);
-            $key = array_search($w, $cardImages);
-            unset($cardImages[$key]);
-
-            $card1 = array_rand(array_flip($allCards), 1);
-            $key = array_search($card1, $allCards);
-            unset($allCards[$key]);
-
-            $card2 = array_rand(array_flip($allCards), 1);
-            $key = array_search($card2, $allCards);
-            unset($allCards[$key]);
-
-            $finalCards[$card1] = $w;
-            $finalCards[$card2] = $w;
-        }
-        ksort($finalCards);
-
-
-        return $this->twig->render('Home/game.html.twig', ['cards' => $finalCards, 'card_number' => $cardsNumber]);
     }
 }
